@@ -46,14 +46,14 @@ def LalphabetatoBGR(img_in):
     L = np.power(L, 10)
     M = np.power(M, 10)
     S = np.power(S, 10)
-
+    
     L = np.where(L == 1.0, 0.0, L)
     M = np.where(M == 1.0, 0.0, M)
     S = np.where(S == 1.0, 0.0, S)
-
-    R = 4.46867*L-3.58868*M+0.119604*S
-    G = -1.21972*L+2.38309*M-0.16263*S
-    B = 0.0585085*L-0.261078*M+1.20567*S
+    
+    R = 4.36226*L-3.38076*M+0.105416*S
+    G = -1.19067*L+2.32634*M-0.158757*S
+    B = 0.0571152*L-0.258356*M+1.20548*S
 
     img_out = cv2.merge((B, G, R))
     return img_out

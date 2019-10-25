@@ -1,0 +1,11 @@
+// See https://aka.ms/vscode-remote/devcontainer.json for format details or
+// https://aka.ms/vscode-dev-containers/definitions for sample configurations.
+{
+	"dockerFile": "Dockerfile",
+	"runArgs": [
+		"-e","DISPLAY=${env:DISPLAY}",
+		"-v","/tmp/.X11-unix:/tmp/.X11-unix",
+		"-p","8000:8000"
+	],
+	"extensions": [],
+}

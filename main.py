@@ -4,6 +4,7 @@ import cv2.cv2 as cv2
 import numpy as np
 import math
 
+
 def computeColor(src, mean_src, stdDev_src, mean_ref, stdDev_ref):
     val = src - mean_src
     coeff = stdDev_ref/stdDev_src
@@ -11,8 +12,6 @@ def computeColor(src, mean_src, stdDev_src, mean_ref, stdDev_ref):
     return result
 
 # https://stackoverflow.com/questions/32696138/converting-from-rgb-to-l%CE%B1%CE%B2-color-spaces-and-converting-it-back-to-rgb-using-open
-
-
 def BGRtoLalphabeta(img_in):
     split_src = cv2.split(img_in)
     L = 0.3811*split_src[2]+0.5583*split_src[1]+0.0402*split_src[0]
@@ -23,12 +22,12 @@ def BGRtoLalphabeta(img_in):
     M = np.where(M == 0.0, 1.0, M)
     S = np.where(S == 0.0, 1.0, S)
 
-    _L = (1.0 / math.sqrt(3.0)) * ((1.0000 * np.log(L)) +
-                                   (1.0000 * np.log(M)) + (1.0000 * np.log(S)))
-    Alph = (1.0 / math.sqrt(6.0)) * ((1.0000 * np.log(L)) +
-                                     (1.0000 * np.log(M)) + (-2.0000 * np.log(S)))
-    Beta = (1.0 / math.sqrt(2.0)) * ((1.0000 * np.log(L)) +
-                                     (-1.0000 * np.log(M)) + (-0.0000 * np.log(S)))
+    _L = (1.0 / math.sqrt(3.0)) * ((1.0000 * np.log10(L)) +
+                                   (1.0000 * np.log10(M)) + (1.0000 * np.log10(S)))
+    Alph = (1.0 / math.sqrt(6.0)) * ((1.0000 * np.log10(L)) +
+                                     (1.0000 * np.log10(M)) + (-2.0000 * np.log10(S)))
+    Beta = (1.0 / math.sqrt(2.0)) * ((1.0000 * np.log10(L)) +
+                                     (-1.0000 * np.log10(M)) + (-0.0000 * np.log10(S)))
 
     img_out = cv2.merge((_L, Alph, Beta))
     return img_out
@@ -44,9 +43,9 @@ def LalphabetatoBGR(img_in):
     M = (0.33333 * _L) + (0.16667 * Alph) + (-0.50000 * Beta)
     S = (0.33333 * _L) + (-0.33333 * Alph) + (0.00000 * Beta)
 
-    L = np.power(L,10)
-    M = np.power(M,10)
-    S = np.power(S,10)
+    L = np.power(L, 10)
+    M = np.power(M, 10)
+    S = np.power(S, 10)
 
     L = np.where(L == 1.0, 0.0, L)
     M = np.where(M == 1.0, 0.0, M)

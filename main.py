@@ -51,9 +51,9 @@ def LalphabetatoBGR(img_in):
     M = np.where(M == 1.0, 0.0, M)
     S = np.where(S == 1.0, 0.0, S)
     
-    R = 4.36226*L-3.38076*M+0.105416*S
-    G = -1.19067*L+2.32634*M-0.158757*S
-    B = 0.0571152*L-0.258356*M+1.20548*S
+    R = 4.36226*L-3.58076*M+0.1193*S
+    G = -1.2186*L+2.3809*M-0.1624*S
+    B = 0.0497*L-0.2439*M+1.2045*S
 
     img_out = cv2.merge((B, G, R))
     return img_out
@@ -89,3 +89,8 @@ def parseArguments():
 if __name__ == '__main__':
     args = parseArguments()
     transfertColor(args.src, args.ref, args.output)
+    #img_src = cv2.imread(args.src)
+    #img_src = BGRtoLalphabeta(img_src)
+    #img_out = LalphabetatoBGR(img_src)
+    #cv2.imwrite(args.output, img_out)
+

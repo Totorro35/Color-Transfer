@@ -14,7 +14,7 @@ def computeColor(src, mean_src, stdDev_src, mean_ref, stdDev_ref):
 # https://stackoverflow.com/questions/32696138/converting-from-rgb-to-l%CE%B1%CE%B2-color-spaces-and-converting-it-back-to-rgb-using-open
 def BGRtoLalphabeta(img_in):
     split_src = cv2.split(img_in)
-    L = 0.3811*split_src[2]+0.5583*split_src[1]+0.0402*split_src[0]
+    L = 0.3811*split_src[2]+0.5783*split_src[1]+0.0402*split_src[0]
     M = 0.1967*split_src[2]+0.7244*split_src[1]+0.0782*split_src[0]
     S = 0.0241*split_src[2]+0.1288*split_src[1]+0.8444*split_src[0]
 
@@ -43,9 +43,9 @@ def LalphabetatoBGR(img_in):
     M = (0.33333 * _L) + (0.16667 * Alph) + (-0.50000 * Beta)
     S = (0.33333 * _L) + (-0.33333 * Alph) + (0.00000 * Beta)
 
-    L = np.power(L, 10)
-    M = np.power(M, 10)
-    S = np.power(S, 10)
+    L = np.power(10, L)
+    M = np.power(10, M)
+    S = np.power(10, S)
     
     L = np.where(L == 1.0, 0.0, L)
     M = np.where(M == 1.0, 0.0, M)

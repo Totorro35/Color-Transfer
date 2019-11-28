@@ -4,24 +4,6 @@ import cv2.cv2 as cv2
 import numpy as np
 import math
 
-
-def computeColor(src, mean_src, stdDev_src, mean_ref, stdDev_ref):
-    val = src - mean_src
-    coeff = stdDev_ref/stdDev_src
-    result = coeff*val + mean_ref
-    return result
-
-# https://www.pyimagesearch.com/2015/10/05/opencv-gamma-correction/
-def adjust_gamma(image, gamma=1.0):
-    # build a lookup table mapping the pixel values [0, 255] to
-    # their adjusted gamma values
-    invGamma = 1.0 / gamma
-    table = np.array([((i / 255.0) ** invGamma) * 255
-        for i in np.arange(0, 256)]).astype("uint8")
-
-    return cv2.LUT(image, table)
-
-# https://stackoverflow.com/questions/32696138/converting-from-rgb-to-l%CE%B1%CE%B2-color-spaces-and-converting-it-back-to-rgb-using-open
 def BGRtoLalphabeta(img_in):
     split_src = cv2.split(img_in)
     L = 0.3811*split_src[2]+0.5783*split_src[1]+0.0402*split_src[0]
@@ -64,38 +46,75 @@ def LalphabetatoBGR(img_in):
     img_out = cv2.merge((B, G, R))
     return img_out
 
+def computeColor(src, mean_src, stdDev_src, mean_ref, stdDev_ref):
+    val = src - mean_src
+    coeff = stdDev_ref/stdDev_src
+    result = coeff*val + mean_ref
+    return result
+
 def read(filename):
-    return cv2.imread(filename)
+    return cv2.imread(filename,cv2.IMREAD_ANYCOLOR | cv2.IMREAD_ANYDEPTH)
 
-def write(filename,image):
-    cv2.imwrite(filename, image)
+def write(filename,file):
+    cv2.imwrite(filename,file)
 
-def FloatToUint8(image):
-    image= np.clip(image, 0, 255)
-    image=image.astype(np.uint8)
-    return image
+def adjust_gamma(img_in,gamma=1.):
+    img_out = np.power(img_in,1/gamma)
+    return img_out
+
+EPSILON=0.0001
+
+def luminance(rgb):
+    r, g, b = rgb[:,:,0], rgb[:,:,1], rgb[:,:,2]
+    lum = np.sqrt(np.power(r,2)+np.power(g,2)+np.power(b,2)) + EPSILON
+
+    return cv2.merge((lum, lum, lum))
+
+def log_average(a):
+    average = np.exp(np.average(np.log(a + EPSILON)))
+    return average
+
+def logarithme(img_in,q=1,k=1):
+    if(q<1):
+        q=1
+    if(k<1):
+        k=1
+    L = luminance(img_in)
+    L_max = np.max(img_in)
+    L_d = np.log10(1+img_in*q) / np.log10(1+L_max*k)
+    img_out = np.multiply(np.multiply(img_in,L_d),1/L)
+    return img_out * 255 * 3
+
+def show(img):
+    cv2.imshow("Result",img)
+    cv2.waitKey(0)
 
 def transfertColor(src, ref, output,gamma):
     img_src = read(src)
+    tonemap = logarithme(img_src)
+    write("in1.jpg",tonemap)
     img_src = adjust_gamma(img_src,gamma)
     img_src = BGRtoLalphabeta(img_src)
 
-    img_ref = cv2.imread(ref)
+    img_ref = read(ref)
+    tonemap = logarithme(img_ref)
+    write("in2.jpg",tonemap)
     img_ref = adjust_gamma(img_ref,gamma)
     img_ref = BGRtoLalphabeta(img_ref)
 
     mean_src, stddev_src = cv2.meanStdDev(img_src)
     mean_ref, stddev_ref = cv2.meanStdDev(img_ref)
+
     split_src = cv2.split(img_src)
     img_out = cv2.merge((computeColor(split_src[0], mean_src[0], stddev_src[0], mean_ref[0], stddev_ref[0]),
                          computeColor(split_src[1], mean_src[1], stddev_src[1], mean_ref[1], stddev_ref[1]),
                          computeColor(split_src[2], mean_src[2], stddev_src[2], mean_ref[2], stddev_ref[2])))
-
     img_out = LalphabetatoBGR(img_out)
-    img_out = FloatToUint8(img_out)
     img_out = adjust_gamma(img_out,1./gamma)
 
     write(output, img_out)
+    tonemap = logarithme(img_out)
+    write("out.jpg",tonemap)
 
 def parseArguments():
     parser = argparse.ArgumentParser()

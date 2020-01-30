@@ -1,18 +1,29 @@
 FROM ubuntu:latest
 
-RUN apt-get update --fix-missing && apt-get install -y git sudo libssl-dev
-RUN apt-get install -y build-essential cmake doxygen graphviz
+RUN apt-get update --fix-missing
+RUN DEBIAN_FRONTEND=noninteractive apt-get install -y \
+    build-essential \
+    cmake \
+    git \
+    sudo \
+    libssl-dev \
+    python3 \
+    python3-pip \
+    libopenexr-dev \
+    zlib1g-dev \
+    openexr \
+    python3-tk \
+    libsm-dev
 
-
-RUN git clone https://github.com/opencv/opencv.git \
-    && mkdir build_opencv \
-    && cd build_opencv \
-    && cmake -D CMAKE_BUILD_TYPE=Release -D CMAKE_INSTALL_PREFIX=/usr/local ../opencv/ \
-    && make -j4 \
-    && make install
-
-RUN apt-get install -y python3 python3-pip libopenexr-dev
-RUN pip3 install opencv-python matplotlib pillow scipy==1.1.0
+RUN pip3 install \
+    opencv-python \
+    matplotlib \
+    pillow \
+    scipy==1.1.0 \
+    tensorflow-gpu \
+    tensorlayer==1.11.0 \
+    OpenEXR \
+    numpy==1.16.2
 
 #mdp is ubuntu
 RUN useradd -ms /bin/bash -p "$(openssl passwd -1 ubuntu)" dock

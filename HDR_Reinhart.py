@@ -85,19 +85,24 @@ def logarithme(img_in,q=1,k=1):
     img_out = np.multiply(np.multiply(img_in,L_d),1/L)
     return img_out * 255 * 3
 
+def reinhard(img_in):
+    tonemapper = cv2.createTonemapReinhard(1.5,0,0,0)
+    ldr = tonemapper.process(img_in)
+    return ldr * 255
+
 def show(img):
     cv2.imshow("Result",img)
     cv2.waitKey(0)
 
 def transfertColor(src, ref, output,gamma):
     img_src = read(src)
-    tonemap = logarithme(img_src)
+    tonemap = reinhard(img_src)
     write("in1.jpg",tonemap)
     img_src = adjust_gamma(img_src,gamma)
     img_src = BGRtoLalphabeta(img_src)
 
     img_ref = read(ref)
-    tonemap = logarithme(img_ref)
+    tonemap = reinhard(img_ref)
     write("in2.jpg",tonemap)
     img_ref = adjust_gamma(img_ref,gamma)
     img_ref = BGRtoLalphabeta(img_ref)

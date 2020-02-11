@@ -5,7 +5,7 @@
 	"runArgs": [
 		"-e","DISPLAY=${env:DISPLAY}",
 		"-v","/tmp/.X11-unix:/tmp/.X11-unix",
-		"-p","8000:8000"
+		"-p","0002:0002"
 	],
-	"extensions": [],
+	"extensions": []
 }

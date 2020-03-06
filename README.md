@@ -8,6 +8,14 @@ Python implementation of [Color Transfer between images](https://www.cs.tau.ac.i
 
 Extension for [HDR](https://people.irisa.fr/Olivier.Le_Meur/publi/Hristova_SPIE2015.pdf
 
+## Interpolate
+
+Script for blending images
+
+## Video Transfert
+
+LDR Color Transfert optimize for between a video and a palette of images
+
 ## Bibtex
 
 `@article{reinhard2001color,

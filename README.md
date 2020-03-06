@@ -6,7 +6,7 @@ Python implementation of [Color Transfer between images](https://www.cs.tau.ac.i
 
 ## HDR Color Transfert
 
-Extension for [HDR](https://people.irisa.fr/Olivier.Le_Meur/publi/Hristova_SPIE2015.pdf
+Extension for [HDR](https://people.irisa.fr/Olivier.Le_Meur/publi/Hristova_SPIE2015.pdf)
 
 ## Interpolate
 

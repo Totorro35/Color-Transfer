@@ -1,6 +1,6 @@
 # Color Transfer
 
-Master 2 Pratical works on Color Transfer
+Master 2 Pratical works on Color Transfer, see [Resume](ColorTransfer.pdf)
 
 ## Installation
 
